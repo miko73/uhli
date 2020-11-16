@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <script>
+         function setText(text) {
+           var element = document.getElementById("myid");
+           element.innerHTML = text;
+         }
+
+         function getDataFromHtml() {
+           var id = "id_for_div";
+           var dataEncoded = document.getElementById(id).innerHTML
+           setText(dataEncoded);
+         }
+
+      </script>
+   </head>
+   <body>
+      <h1 id="myid">Sample Text</h1>
+
+      <button onclick="getDataFromHtml()">Try Now!</button>
+   </body>
+</html>

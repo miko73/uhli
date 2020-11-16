@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+    {% for clen in clenove %}
+       <a href={% url "clen_detail" clen.id %}> Příjmení člena: {{clen.jmeno}}{{clen.prijmeni}} </a><br>
+    {% endfor %}
+{% endblock %}

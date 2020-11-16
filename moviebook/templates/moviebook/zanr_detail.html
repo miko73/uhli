@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1> {{ zanr.nazev_zanru }} <span class="glyphicon glyphicon-erase"></span></h1>
+    <hr>
+    <form method="POST">
+        {% csrf_token %}
+        {% if user.is_admin %}<button name="edit_zanr">Upravit žánr</button><button name="delete_zanr">Smazat žánr</button>{% endif %}
+    </form>
+{% endblock %}

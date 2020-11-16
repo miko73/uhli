@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+    {% for zanr in zanry %}
+       <a href={% url "zanrovy_detail" zanr.id %}> Název: {{zanr.nazev_zanru}} </a><br>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+        <title>Anayza Karlin</title>
+</head>
+<body>
+    <form method="POST">
+        {% csrf_token %}
+        <span style="color: red;">{{error_msg}}</span>
+        <br>
+        <input type="text" name="a" value={{request.POST.a}}>
+        <br>
+{#        {% for usage in usages %}#}
+{#            {{usage}} <br>#}
+{#        {% endfor %}#}
+{#        <br>#}
+{#        <select name="op_usage">#}
+            {% for usage in usages %}
+                <div>
+                  <input type="checkbox" id="{{usage}}" name="{{usage}}"
+                         checked>
+                  <label for="{{usage}}">{{usage}}</label>
+                </div>
+
+{#                <option value={{usage}} {% if request.POST.operator == {{usage}} %} selected {% endif %}>{{usage}}</option>#}
+{#                <option value={{usage}} {% if request.POST.op_usage == usage %} selected {% endif %}>{{usage}}</option>#}
+{#                <option value="+" {% if request.POST.operator == "+" %} selected {% endif %}>+</option>#}
+            {% endfor %}
+
+
+{#        </select>#}
+
+
+
+        <select name="operator">
+            <option value="+" {% if request.POST.operator == "+" %} selected {% endif %}>++</option>
+            <option value="-" {% if request.POST.operator == "-" %} selected {% endif %}>--</option>
+            <option value="*" {% if request.POST.operator == "*" %} selected {% endif %}>**</option>
+            <option value="/" {% if request.POST.operator == "/" %} selected {% endif %}>//</option>
+        </select>
+
+        <input type="submit"><br>
+{#        {{vysledek}}#}
+
+        {% for row in rows %}
+            {{row}} <br>
+        {% endfor %}
+    </form>
+</body>
+</html>

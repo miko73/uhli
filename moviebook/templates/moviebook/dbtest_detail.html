@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Tady jsem na DB testu</h1>
+    <h3> Příjemní: {{ clen.prijmeni }} <span class="glyphicon glyphicon-erase"></span></h3>
+    <h3> Jméno: {{ clen.jmeno }} <span class="glyphicon glyphicon-erase"></span></h3>
+    <h3> Email: {{ clen.email }} <span class="glyphicon glyphicon-erase"></span></h3>
+    <h3> Email: {{ clen.narozen }} <span class="glyphicon glyphicon-erase"></span></h3>
+    <h3> Rodné číslo: {{ clen.rc }} <span class="glyphicon glyphicon-erase"></span></h3>
+    <h3> FAČR id: {{ clen.facr_id }} <span class="glyphicon glyphicon-erase"></span></h3>
+    <h3> Variabilní symbol: {{ clen.var_symbol }} <span class="glyphicon glyphicon-erase"></span></h3>
+    <h3> Číslo účtu: {{ clen.cislo_uctu }} <span class="glyphicon glyphicon-erase"></span></h3>
+    <h3> Telefonní číslo: {{ clen.telefonni_cislo }} <span class="glyphicon glyphicon-erase"></span></h3>
+    <h3> Příjmení rodič: {{ clen.prijmeni_rodic }} <span class="glyphicon glyphicon-erase"></span></h3>
+    <hr>
+    <form method="POST">
+        {% csrf_token %}
+        {% if user.is_admin %}<button name="edit_clen">spustit test1</button><button name="delete_clen">Smazat člena</button><button name="db_tests">Db tests</button>{% endif %}
+    </form>
+{% endblock %}
