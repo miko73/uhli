@@ -1,57 +1,56 @@
-#  _____ _______         _                      _
-# |_   _|__   __|       | |                    | |
-#   | |    | |_ __   ___| |___      _____  _ __| | __  ___ ____
-#   | |    | | '_ \ / _ \ __\ \ /\ / / _ \| '__| |/ / / __|_  /
-#  _| |_   | | | | |  __/ |_ \ V  V / (_) | |  |   < | (__ / /
-# |_____|  |_|_| |_|\___|\__| \_/\_/ \___/|_|  |_|\_(_)___/___|
-#                                _
-#              ___ ___ ___ _____|_|_ _ _____
-#             | . |  _| -_|     | | | |     |  LICENCE
-#             |  _|_| |___|_|_|_|_|___|_|_|_|
-#             |_|
-#
-# IT ZPRAVODAJSTVÍ  <>  PROGRAMOVÁNÍ  <>  HW A SW  <>  KOMUNITA
-#
-# Tento zdrojový kód je součástí výukových seriálů na
-# IT sociální síti WWW.ITNETWORK.CZ
-#
-# Kód spadá pod licenci prémiového obsahu a vznikl díky podpoře
-# našich členů. Je určen pouze pro osobní užití a nesmí být šířen.
-# Více informací na http://www.itnetwork.cz/licence
-
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import User
 
+
+
+class CustomDateTimeField(models.DateTimeField):
+    def value_to_string(self, obj):
+        val = self.value_from_object(obj)
+        if val:
+            val.replace(microsecond=0)
+            return val.isoformat()
+        return ''
 
 class Clen (models.Model):
-    email = models.EmailField(max_length = 300, null=True, default="", unique=False)
-    rc = models.CharField(max_length=10, null=True, default="", unique=False)
-    narozen = models.DateTimeField(null=True)
-    clenem_od = models.DateTimeField(null=True)
-    active = models.BooleanField(default=True)
-    jmeno = models.CharField(max_length = 40, null=True, default="", unique=False)
-    prijmeni = models.CharField(max_length = 40, null=True, default="", unique=False)
-    prijmeni_rodic = models.CharField(max_length = 40, null=True, default="", unique=False)
-    facr_id = models.IntegerField (default=1, null=True)
-    var_symbol = models.IntegerField (default=1, null=True)
-    klub_id = models.IntegerField (default=1050181, null=True)
-    cislo_uctu = models.CharField(max_length=30, null=True, default="", unique=False)
-    telefonni_cislo = models.CharField(max_length=30, null=True, default="", unique=False)
-    typ_clena = models.CharField(max_length=20, null=True, default="", unique=False)
-    ucet_protiucet = models.CharField(max_length=20, null=True, default="", unique=False)
-    ucet_protiucet2 = models.CharField(max_length=20, null=True, default="", unique=False)
-    ucet_kod_banky = models.CharField(max_length=6, null=True, default="", unique=False)
-    ucet_zprava_pro_prijemce = models.CharField(max_length=160, null=True, default="", unique=False)
-    ucet_poznamka = models.CharField(max_length=160, null=True, default="", unique=False)
-    ucet_nazev_protiuctu = models.CharField(max_length=100, null=True, default="", unique=False)
-    rok_narozeni = models.CharField(max_length=4, null=True, default="1111", unique=False )
+    email = models.EmailField(max_length = 300, null=True, blank=True, default="", unique=False)
+    rc = models.CharField(max_length=10, null=True, blank=True, default="", unique=False)
+    # narozen = models.DateTimeField(null=True, blank=True)
+    narozen = models.DateField(null=True, blank=True)
+    # narozen = CustomDateTimeField(auto_now_add=True)
+    clenem_od = models.DateTimeField(null=True, blank=True)
+    active = models.BooleanField(default=True, blank=True)
+    jmeno = models.CharField(max_length = 40, null=True, blank=True, default="", unique=False)
+    prijmeni = models.CharField(max_length = 40, null=True, blank=True, default="", unique=False)
+    prijmeni_rodic = models.CharField(max_length = 40, null=True, blank=True, default="", unique=False)
+    facr_id = models.IntegerField (default=1)
+    var_symbol = models.IntegerField (default=1)
+    klub_id = models.IntegerField (default=10)
+    cislo_uctu = models.CharField(max_length=30, null=True, blank=True, default="", unique=False)
+    telefonni_cislo = models.CharField(max_length=30, null=True, blank=True, default="", unique=False)
+    typ_clena = models.CharField(max_length=20, null=True, blank=True, default="", unique=False)
+    ucet_protiucet = models.CharField(max_length=20, null=True, blank=True, default="", unique=False)
+    ucet_protiucet2 = models.CharField(max_length=20, null=True, blank=True, default="", unique=False)
+    ucet_kod_banky = models.CharField(max_length=6, null=True, blank=True, default="", unique=False)
+    ucet_zprava_pro_prijemce = models.CharField(max_length=160, null=True, blank=True, default="", unique=False)
+    ucet_poznamka = models.CharField(max_length=160, null=True, blank=True, default="", unique=False)
+    ucet_nazev_protiuctu = models.CharField(max_length=100, null=True, blank=True, default="", unique=False)
+    rok_narozeni = models.CharField(max_length=4, null=True, blank=True, default="", unique=False )
+
 
     def __str__(self):
-        return "Jméno: {0} | Príjemní: {1} | email {2} ".format(self.jmeno, self.prijmeni, self.email)
+        return "Jméno: {0} | Príjemní: {1} | email {2} ".format(self.jmeno, self.prijmeni, self.email, self.narozen)
 
     class Meta:
         verbose_name = "Clen"
         verbose_name_plural = "Clenové"
+
+
+# class ClenFilter(django_filters.FilterSet):
+#     class Meta:
+#         model = Clen
+#         fields = ['prijmeni', ]
+
 
 class Prichozi_platby(models.Model):
     datum = models.DateField( null=True)

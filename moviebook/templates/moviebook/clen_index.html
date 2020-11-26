@@ -1,6 +1,36 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block content %}
-    {% for clen in clenove %}
-       <a href={% url "clen_detail" clen.id %}> Příjmení člena: {{clen.jmeno}}{{clen.prijmeni}} </a><br>
-    {% endfor %}
+
+  <h3>Filter Journals</h3>
+      <form method="GET" action=".">
+        <div class="form-row">
+            <div class="form-group col-12">
+                <div class="input-group">
+                    <input class="form-control py-2 border-right-0 border" type="search" name="title_contains" placeholder="Title contains..." />
+                    <span class="input-group-append">
+                        <div class="input-group-text bg-transparent">
+                            <i class="fa fa-search"></i>
+                        </div>
+                    </span>
+                </div>
+            </div>        
+        </div>
+      </form>  
+  
+
+  <div class="row">
+	  <ul>
+	  	  <h3>Záznamy</h3>
+		  {% for clen in clen_qs %}
+		    <a href={% url "clen_detail" clen.id %}> Příjmení člena: {{clen.jmeno}} {{clen.prijmeni}} </a><br>
+		  {% endfor %}
+	  </ul>
+  </div>
+	<aside>
+		<h1>Podobné produkty:</h1>
+	</aside>
+
+
 {% endblock %}
+
+

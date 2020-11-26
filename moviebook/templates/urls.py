@@ -33,7 +33,8 @@ urlpatterns = [
     path("<int:pk>/edit_film/", views.EditFilm.as_view(), name="edit_film"),
     path("<int:pk>/edit_zanr/", views.EditZanr.as_view(), name="edit_zanr"),
 # sada formulářů pro člena
-    path("clen_index/", views.ClenIndex.as_view(), name="clenove_index"),
+    # path("clen_index/", views.ClenIndex.as_view(), name="clenove_index"),
+    path('clen_index/', views.ClenIndex, name='clenove_index'),
     path("<int:pk>/clen_detail/", views.CurrentClenView.as_view(), name="clen_detail"),
     path("create_clen/", views.CreateClen.as_view(), name="novy_clen"),
     path("<int:pk>/edit_clen/", views.EditClen.as_view(), name="edit_clen"),

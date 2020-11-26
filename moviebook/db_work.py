@@ -1,10 +1,9 @@
 import sqlite3
 import django
-django.setup()
 
 
 from sqlite3 import Error
-from biz_test import biz_modul
+# from biz_test import biz_modul
 from django.shortcuts import render
 from django.views import generic
 
@@ -15,13 +14,15 @@ from django.views import generic
 from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import redirect, reverse
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
+# from django.contrib.auth.mixins import LoginRequiredMixin
 
+import os
 
+from django.core.wsgi import get_wsgi_application
 
-class LoginForm(forms.Form):
-    email = forms.CharField()
-    password = forms.CharField(widget=forms.PasswordInput)
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'uhli.settings')
+
+#application = get_wsgi_application()
 
 
 def create_connection(db_file):
@@ -36,7 +37,7 @@ def create_connection(db_file):
     except Error as e:
         print(e)
 
-    #DB name test only
+    # DB name test only
     cur = conn.cursor()
     cur.execute("PRAGMA database_list;")
     curr_table = cur.fetchall()
@@ -44,6 +45,7 @@ def create_connection(db_file):
         print("skupiny - {}".format(table))
 
     return conn
+
 
 def update_movie_clen_by_facrID(conn):
     """
@@ -63,7 +65,7 @@ def update_movie_clen_by_facrID(conn):
 # ".format(parameter1))
 
     cur.execute("select Příjmení , Jméno, ČlenskéID from seznam_hracu_facr;")
-                # "select moviebook_clen.jmeno, moviebook_clen.prijmeni,  from moviebook_clen;")
+    # "select moviebook_clen.jmeno, moviebook_clen.prijmeni,  from moviebook_clen;")
 
     #cur.execute("insert into groups values (1 , 'skupina 1')")
     #cur.execute("select * from groups")
@@ -72,7 +74,8 @@ def update_movie_clen_by_facrID(conn):
     rows = cur.fetchall()
  #   print(rows)
     for row in rows:
-        update = "update moviebook_clen set facr_id = '{2}' where prijmeni='{0}' and jmeno='{1}';".format(row[0], row[1], row[2])
+        update = "update moviebook_clen set facr_id = '{2}' where prijmeni='{0}' and jmeno='{1}';".format(
+            row[0], row[1], row[2])
         print("{}".format(update))
         cur.execute(update)
 
@@ -83,18 +86,44 @@ def update_movie_clen_by_facrID(conn):
 
     return rows
 
+
+def select_all_tasks(conn):
+    """
+    Query all rows in the tasks table
+    :param conn: the Connection object
+    :return:
+    """
+
+    cur = conn.cursor()
+
+    cur.execute("select jmeno, prijmeni, rc from moviebook_clen")
+
+    rows = cur.fetchall()
+ #   print(rows)
+    # for row in rows:
+    #     update = "update moviebook_clen set facr_id = '{2}' where prijmeni='{0}' and jmeno='{1}';".format(
+    #         row[0], row[1], row[2])
+    #     print("{}".format(update))
+    #     cur.execute(update)
+
+    # try:
+    #     cur.execute("commit;")
+    # except Error as e:
+    #     print(e)
+
+    return rows
+
+
 def GetPlatbyAll(conn):
     cur = conn.cursor()
 
 
+# u
 
 
-#u
+# dbcon=create_connection("C:\Users\micha\PycharmProjects\uhli\biz1.db")
 
-
-#dbcon=create_connection("C:\Users\micha\PycharmProjects\uhli\biz1.db")
-
-dbcon=create_connection("../db.sqlite3")
+dbcon = create_connection("../db.sqlite3")
 # cur = dbcon.execute("PRAGMA database_list;")
 # curr_table = cur.fetchall()
 # for table in curr_table:
@@ -104,7 +133,7 @@ dbcon=create_connection("../db.sqlite3")
 # print(rows)
 
 
-#print(usage_list)
+# print(usage_list)
 
 rows = select_all_tasks(dbcon)
 

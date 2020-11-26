@@ -1,9 +1,9 @@
 import sqlite3
 from sqlite3 import Error
-from biz_test import biz_modul
+# from biz_modul import biz_test
 import pandas as pd
 import matplotlib.pyplot as plt
-
+import sys
 
 
 def create_connection(db_file):
@@ -12,13 +12,13 @@ def create_connection(db_file):
     :param db_file: database file
     :return: Connection object or None
     """
-    conn = None
+    # conn = None
     try:
         conn = sqlite3.connect(db_file)
     except Error as e:
         print(e)
 
-    #DB name test only
+    # DB name test only
     cur = conn.cursor()
     cur.execute("PRAGMA database_list;")
     curr_table = cur.fetchall()
@@ -26,6 +26,7 @@ def create_connection(db_file):
         print("skupiny - {}".format(table))
 
     return conn
+
 
 def select_all_tasks(conn):
     """
@@ -46,7 +47,6 @@ def select_all_tasks(conn):
 # and abuild.AddressText = '{}' \
 # ".format(parameter1))
 
-
     #cur.execute("insert into groups values (1 , 'skupina 1')")
     #cur.execute("select * from groups")
     #cur.execute("CREATE TABLE groups (group_id INTEGER PRIMARY KEY,name TEXT NOT NULL);")
@@ -59,19 +59,13 @@ def select_all_tasks(conn):
     return rows
 
 #usage_list = biz_modul.get_result("select UsageCode, UsageLabel from UsageAddresList;")
-#print(usage_list)
+# print(usage_list)
 
 
-
-
-
-
-
-
-
-con=create_connection("../biz1.db")
+con = create_connection("../biz1.db")
 # Read sqlite query results into a pandas DataFrame
 
+pd.TEST_CHARSET: {'charset': 'iso-8859-1', 'use_unicode': True, }
 
 df = pd.read_sql_query("select pocet_firem, AddressText, AddressCode, emp_num, FlatC from \
 ( \
@@ -81,27 +75,29 @@ where  \
 com.CompanyIN = acom.CompanyIN AND \
 abuild.AddressCode = acom.AddressCode AND \
 am.Kod = abuild.AddressCode \
-and IsHq=1						\
-and not UsageCode in (1, 3, 6, 7)			\
+and IsHq=1                      \
+and not UsageCode in (1, 3, 6, 7)           \
 GROUP by abuild.AddressText, abuild.AddressCode  \
 )  \
-order by pocet_firem DESC;", con)
+order by pocet_firem DESC;", con).encoding('UTF-8')
 
 # Verify that result of SQL query is stored in the dataframe
 
-#print(df)
+# print(df)
 # for row in df.iterrows():
 #     print (row)
 
 #print(df['UsageCode'],df['UsageLabel'] )
 #print(df[['UsageCode','UsageLabel']] )
-print( df [0:-1] )
-#where FlatC < 10
+# encoding = "UTF-8"
+# con.text_factory = lambda x: str(x, encoding)
+
+# source = str(source, "utf8")
+print(df[0:-1].encode('cp1252', errors='replace').decode('cp1252'))
+# where FlatC < 10
 
 
 #print(df.query('FlatC < "10" '))
-
-
 
 
 # dbcon=create_connection("C:\Users\micha\PycharmProjects\uhli\biz1.db")

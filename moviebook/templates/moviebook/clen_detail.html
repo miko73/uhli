@@ -1,18 +1,34 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 {% block content %}
-    <h3> Příjemní: {{ clen.prijmeni }} <span class="glyphicon glyphicon-erase"></span></h3>
-    <h3> Jméno: {{ clen.jmeno }} <span class="glyphicon glyphicon-erase"></span></h3>
-    <h3> Email: {{ clen.email }} <span class="glyphicon glyphicon-erase"></span></h3>
-    <h3> Email: {{ clen.narozen }} <span class="glyphicon glyphicon-erase"></span></h3>
-    <h3> Rodné číslo: {{ clen.rc }} <span class="glyphicon glyphicon-erase"></span></h3>
-    <h3> FAČR id: {{ clen.facr_id }} <span class="glyphicon glyphicon-erase"></span></h3>
-    <h3> Variabilní symbol: {{ clen.var_symbol }} <span class="glyphicon glyphicon-erase"></span></h3>
-    <h3> Číslo účtu: {{ clen.cislo_uctu }} <span class="glyphicon glyphicon-erase"></span></h3>
-    <h3> Telefonní číslo: {{ clen.telefonni_cislo }} <span class="glyphicon glyphicon-erase"></span></h3>
-    <h3> Příjmení rodič: {{ clen.prijmeni_rodic }} <span class="glyphicon glyphicon-erase"></span></h3>
-    <hr>
-    <form method="POST">
-        {% csrf_token %}
-        {% if user.is_admin %}<button name="edit_clen">Upravit člena</button><button name="delete_clen">Smazat člena</button><button name="db_tests">Db tests</button>{% endif %}
-    </form>
+    <div class="form_group">
+        <h3>Fieldy</h3>
+
+        <table>
+        <tr>
+        
+        <td>
+        {% for field in form %}      
+             <tr> <th> {{ field.label}} </th> <th> {{field.value}}</th> <span class="glyphicon glyphicon-erase"></span>
+             </tr>
+        {% endfor %} 
+
+        </td>
+        
+        </tr>
+        </table>
+
+
+        <form method="post">
+            {% csrf_token %}
+            {# <table>{{ form.as_table }}</table> #}<table>
+            <table>{{ form.name_of_field }}</table>
+            {% if user.is_admin %}
+                <button name="edit_clen">Upravit člena</button>
+                <button name="delete_clen">Smazat člena</button>
+                <button name="db_tests">Db tests</button>
+            {% endif %}     
+            </table>
+        </form>
+    </div>
 {% endblock %}
