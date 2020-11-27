@@ -4,19 +4,32 @@
     <div class="form_group">
         <h3>Fieldy</h3>
 
-        <table>
-        <tr>
-        
-        <td>
-        {% for field in form %}      
-             <tr> <th> {{ field.label}} </th> <th> {{field.value}}</th> <span class="glyphicon glyphicon-erase"></span>
-             </tr>
-        {% endfor %} 
 
-        </td>
-        
-        </tr>
-        </table>
+   <div class="container-fluid bg-light">
+        <div class="row">
+            <div class="col-6 border bg-warning">
+                <table>
+                <tr>    
+                <td>
+                {% for field in form %}      
+                     <tr> <th> {{ field.label}} </th> <th> {{field.value}}</th> <span class="glyphicon glyphicon-erase"></span>
+                     </tr>
+                {% endfor %} 
+                </td>        
+                </tr>
+                </table>
+
+            </div>
+            <div class="col-3 border bg-success text-white">
+                Ctvrtina
+            </div>
+            <div class="col-3 border bg-success text-white">
+                Ctvrtina
+            </div>
+            
+        </div>
+    </div>
+
 
 
         <form method="post">

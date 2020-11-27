@@ -17,18 +17,23 @@
         </div>
       </form>  
   
+	<div class="container-fluid bg-light">
+		{% for clen in clen_qs %}
+		    <div class="row">
+		    	<div class="col-6 border bg-warning">
+		            <a href={% url "clen_detail" clen.id %}> Příjmení člena: {{clen.jmeno}} {{clen.prijmeni}} </a>
+		        </div>
+		        <div class="col-3 border bg-success text-white">
+		            Ctvrtina
+		        </div>
+		        <div class="col-3 border bg-success text-white">
+		            Ctvrtina
+		        </div>
+		        
+		    </div>
 
-  <div class="row">
-	  <ul>
-	  	  <h3>Záznamy</h3>
-		  {% for clen in clen_qs %}
-		    <a href={% url "clen_detail" clen.id %}> Příjmení člena: {{clen.jmeno}} {{clen.prijmeni}} </a><br>
-		  {% endfor %}
-	  </ul>
-  </div>
-	<aside>
-		<h1>Podobné produkty:</h1>
-	</aside>
+		{% endfor %}
+	</div>
 
 
 {% endblock %}
