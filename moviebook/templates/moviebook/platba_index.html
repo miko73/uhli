@@ -18,15 +18,15 @@
       </form>  
   
 	<div class="container-fluid bg-light">
-		{% for clen in clen_qs %}
+		{% for platba in platba_qs %}
 		    <div class="row">
-		    	<div class="col-6 border bg-warning">
-		            <a href={% url "clen_detail" clen.id %}> Příjmení člena: {{clen.jmeno}} {{clen.prijmeni}} {{clen.rok_narozeni}}</a>
+		    	<div class="col-8 border bg-success text-white">
+		            <a href={% url "platba_detail" platba.id %}> Příjmení člena: {{ platba.datum|date:'F' }} {{platba.objem}} {{platba.zprava_pro_prijemce}}  {{platba.nazev_protiuctu}}</a>
 		        </div>
-		        <div class="col-3 border bg-success text-white">
+		        <div class="col-2 border bg-success bg-warning">
 		            Ctvrtina
 		        </div>
-		        <div class="col-3 border bg-success text-white">
+		        <div class="col-2 border bg-success bg-warning">
 		            Ctvrtina
 		        </div>
 		        

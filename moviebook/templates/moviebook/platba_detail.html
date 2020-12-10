@@ -21,17 +21,9 @@
 
             </div>
             <div class="col-7 border bg-success text-white">
-                <div class="container-fluid bg-light">
-                    {% for platba in platba_qs %}
-                        <div class="row">
-                            <div class="col-12 border bg-success bg-warning">
-                                <a href={% url "platba_detail" platba.id %}> platba: {{ platba.datum|date:'F' }} {{platba.objem}} {{platba.zprava_pro_prijemce}}  {{platba.nazev_protiuctu}}</a>
-                                <span class="glyphicon glyphicon-erase"></span>
-                            </div>                            
-                        </div>
-                    {% endfor %}
-                </div>
+                Ctvrtina
             </div>
+            
         </div>
     </div>
 
@@ -42,9 +34,8 @@
             {# <table>{{ form.as_table }}</table> #}<table>
             <table>{{ form.name_of_field }}</table>
             {% if user.is_admin %}
-                <button name="edit_clen">Upravit člena</button>
-                <button name="delete_clen">Smazat člena</button>
-                <button name="db_tests">Db tests</button>
+                <button name="edit_platba">Upravit platbu</button>
+                <button name="delete_plaba">Smazat platbu</button>
             {% endif %}     
             </table>
         </form>

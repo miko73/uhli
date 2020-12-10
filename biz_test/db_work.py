@@ -79,7 +79,7 @@ and IsHq=1                      \
 and not UsageCode in (1, 3, 6, 7)           \
 GROUP by abuild.AddressText, abuild.AddressCode  \
 )  \
-order by pocet_firem DESC;", con).encoding('UTF-8')
+order by pocet_firem DESC;", con)
 
 # Verify that result of SQL query is stored in the dataframe
 
@@ -93,7 +93,7 @@ order by pocet_firem DESC;", con).encoding('UTF-8')
 # con.text_factory = lambda x: str(x, encoding)
 
 # source = str(source, "utf8")
-print(df[0:-1].encode('cp1252', errors='replace').decode('cp1252'))
+print(df[0:-1])
 # where FlatC < 10
 
 

@@ -1,35 +1,17 @@
-#  _____ _______         _                      _
-# |_   _|__   __|       | |                    | |
-#   | |    | |_ __   ___| |___      _____  _ __| | __  ___ ____
-#   | |    | | '_ \ / _ \ __\ \ /\ / / _ \| '__| |/ / / __|_  /
-#  _| |_   | | | | |  __/ |_ \ V  V / (_) | |  |   < | (__ / /
-# |_____|  |_|_| |_|\___|\__| \_/\_/ \___/|_|  |_|\_(_)___/___|
-#                                _
-#              ___ ___ ___ _____|_|_ _ _____
-#             | . |  _| -_|     | | | |     |  LICENCE
-#             |  _|_| |___|_|_|_|_|___|_|_|_|
-#             |_|
-#
-# IT ZPRAVODAJSTVÍ  <>  PROGRAMOVÁNÍ  <>  HW A SW  <>  KOMUNITA
-#
-# Tento zdrojový kód je součástí výukových seriálů na
-# IT sociální síti WWW.ITNETWORK.CZ
-#
-# Kód spadá pod licenci prémiového obsahu a vznikl díky podpoře
-# našich členů. Je určen pouze pro osobní užití a nesmí být šířen.
-# Více informací na http://www.itnetwork.cz/licence
 
 from django.shortcuts import render
 from django.views import generic
 
 from .models import Zanr, Film, Uzivatel, Clen
 from .forms import FilmForm, ZanrForm,  ClenForm, UzivatelForm, LoginForm
-from .clen_view import ClenIndex, CurrentClenView, CreateClen, EditClen
+from .clen_view import ClenIndex, CurrentClenView, CreateClen, EditClen, Prichozi_platby, PlatbaIndex, CurrentPlatbaView, EditPlatba
+
 
 from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import redirect, reverse
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+import csv
 
 class FilmIndex(generic.ListView):
 
@@ -283,6 +265,28 @@ def logout_user(request):
         messages.info(request, "Nemůžeš se odhlásit, pokud nejsi přihlášený.")
     return redirect(reverse("login"))
 
+
+
+def load_vypis():
+    # dbcon = create_connection("../db.sqlite3")
+    with open('C:\\Users\\micha\\Projects\\uhli\\Pohyby_na_uctu-2000679390_20160101-20201201.csv', encoding='UTF-8') as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=';')
+        line_count = 0
+        for row in csv_reader:
+            if line_count == 0:
+                print(f'Column names are {", ".join(row)}')
+                line_count += 1
+            else:
+                # print(f'\t{row[0]},{row[1]},{row[2]},{row[4]},{row[5]},{row[6]},{row[7]}')
+                
+                platba = Prichozi_platby(row[0],row[1],row[2],row[4],row[5],row[6],row[7])
+                print (platba)
+                platba.save()
+
+                line_count += 1
+            if line_count > 10:
+                break
+
 class DbTestClen(generic.DetailView):
     model = Clen
     template_name = "moviebook/dbtest_detail.html"
@@ -295,26 +299,16 @@ class DbTestClen(generic.DetailView):
         return render(request, self.template_name, {"clen": clen})
 
     def post(self, request, pk):
-        if "edit_clen" in request.POST:
-
-            c1 = Clen.objects.create(narozen="2012-07-25", clenem_od = "2020-12-24")
-            c1.jmeno = "Tobiáš"
-            c1.prijmeni = "Kočandrle"
-            c1.rc = "123567"
-            c1.clenem_od = "2020-12-24"
-            c1.narozen = "2012-07-25"
-            c1.facr_id = 10
-            c1.klub_id = 1050181
-            c1.var_symbol = 122
-            c1.save()
-            del c1
+        try:
+            clen = self.get_object()
+        except:
             return redirect("clenove_index")
 
 
-            #return redirect(reverse("clenove_index"))
-        if "delete_clen" in request.POST:
-            return redirect("clenove_index")
-#                    return redirect(reverse("clenove_index"))
-        else:
-#                   self.get_object().delete()
-            return redirect("clenove_index")
+        if "test1" in request.POST:
+             load_vypis()
+        if "test2" in request.POST:
+            pass
+        if "test3" in request.POST:
+            pass
+        return render(request, self.template_name, {"clen": clen})

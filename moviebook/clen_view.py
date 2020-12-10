@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views import generic
 
 from .models import Zanr, Film, Uzivatel, Clen, Prichozi_platby, Naplanovane_platby
-from .forms import FilmForm, ZanrForm, UzivatelForm, LoginForm, ClenForm
+from .forms import FilmForm, ZanrForm, UzivatelForm, LoginForm, ClenForm, PlatbaForm
 from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import redirect, reverse
 from django.contrib import messages
@@ -11,7 +11,101 @@ from django.contrib.auth.models import User
 from django.shortcuts import render
 
 
+#######################################
+# Platba
+#######################################
 
+def PlatbaIndex(request):
+    # qs = Platba_list = Prichozi_platby.objects.all()
+    qs = Prichozi_platby.objects.all()
+    platba_contains_query = request.GET.get('title_contains')
+   
+    # print("title_contains_query - {0}".format(title_contains_query))
+    if platba_contains_query != '' and platba_contains_query is not None:
+    # qs = qs.filter(facr_id__icontains=9090086)
+        qs = qs.filter(zprava_pro_prijemce__icontains=platba_contains_query)
+    print(qs)
+
+    context = {
+        'platbaba_qs': qs
+    }
+    return render(request, "moviebook/platba_index.html", context)
+
+##############################
+class CurrentPlatbaView(generic.edit.CreateView):
+    model = Prichozi_platby
+    form_class = PlatbaForm
+    template_name = "moviebook/platba_detail.html"
+    def get(self, request, pk):
+        try:
+            platba = Prichozi_platby.objects.get(pk=pk)
+        except:
+            return redirect("platba_index")
+        
+        form = self.form_class(instance=platba)
+        
+        # print(f'facr_id_query {facr_id_query}')
+        
+        context = {
+        'form':form
+        }
+        # return render(request, self.template_name, {"form": form })
+        # return render(request, self.template_name, {"form": form, "platby":qs_platby})
+        return render(request, self.template_name, context)
+
+
+    def post(self, request, pk):
+        if request.user.is_authenticated:
+            if "edit_platba" in request.POST:
+                return redirect("edit_platba", pk=self.get_object().pk)
+            if "delete_platba" in request.POST:
+                if not request.user.is_admin:
+                    messages.info(request, "Nemáš práva pro smazání člena.")
+                    return redirect(reverse("clenove_index"))
+                else:
+                    self.get_object().delete()
+        return redirect(reverse("platba_index"))
+
+
+class EditPlatba(LoginRequiredMixin, generic.edit.UpdateView):
+    form_class = PlatbaForm
+    template_name = "moviebook/create_clen.html"
+
+
+    def get(self, request, pk):        
+        
+        if not request.user.is_admin:
+            messages.info(request, "Nemáš práva pro úpravu.")
+            return redirect(reverse("platba_index"))
+        try:
+            platba = Prichozi_platby.objects.get(pk=pk)
+        except:
+            messages.error(request, "Platba neexistuje!")
+            return redirect("platba_index")
+        print ("EDIT PLATBA")
+        form = self.form_class(instance=platba)
+        
+        return render(request, self.template_name, {"form": form})
+
+    def post(self, request, pk):
+        if not request.user.is_admin:
+            messages.info(request, "Nemáš práva pro úpravu")
+            return redirect(reverse("platba_index"))
+        context = {}
+        platba = Prichozi_platby.objects.get(pk=pk)
+        form = self.form_class(request.POST, instance=platba) # Here is the difference between insert and updte instance=clen has to be passed as imput parameter            
+        if form.is_valid():
+            try:
+                form.save()
+                messages.info(request, "SAVED !!!")
+            except:
+                messages.error(request, "Can not save")
+        else:
+            messages.info(request, "Chyba ve formuláři ")
+        return render(request, self.template_name, {"form":form})
+#######################################
+# Clen
+#######################################
 
 def ClenIndex(request):
     qs = Clen_list = Clen.objects.all()
@@ -20,7 +114,9 @@ def ClenIndex(request):
 
     if title_contains_query != '' and title_contains_query is not None:
         qs = qs.filter(prijmeni__icontains=title_contains_query)        
-    print(qs)
+
+    
+    # print(qs)
 
     # elif id_exact_query != '' and id_exact_query is not None:
     #     qs = qs.filter(id=id_exact_query)
@@ -47,12 +143,32 @@ class CurrentClenView(generic.edit.CreateView):
     def get(self, request, pk):
         try:
             clen = Clen.objects.get(pk=pk)
+            # platby = Clen.objects.all()
+            # platby = platby.filter(clen__in=clen.var_symbol )
+
+            # qs_platby = Prichozi_platby.objects.all()
+            facr_id_query = clen.facr_id
+            qs_platby = Prichozi_platby.objects.all()
+            qs_platby = qs_platby.filter(facr_id__icontains=facr_id_query)
+    
+            # qs_platby = qs_platby.filter(facr_id__icontains=facr_id_query)
+            print ("qs_platby", qs_platby)
+            # for platba in qs_platby:
+            # print (len(qs_platby))
         except:
             return redirect("clenove_index")
         
         form = self.form_class(instance=clen)
-
-        return render(request, self.template_name, {"form": form})
+        
+        # print(f'facr_id_query {facr_id_query}')
+        
+        context = {
+        'form':form,
+        'platba_qs':qs_platby
+        }
+        # return render(request, self.template_name, {"form": form })
+        # return render(request, self.template_name, {"form": form, "platby":qs_platby})
+        return render(request, self.template_name, context)
 
 
     def post(self, request, pk):
@@ -68,6 +184,8 @@ class CurrentClenView(generic.edit.CreateView):
                 else:
                     self.get_object().delete()
         return redirect(reverse("clenove_index"))
+
+
 
 
 

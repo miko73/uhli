@@ -1,23 +1,3 @@
-#  _____ _______         _                      _
-# |_   _|__   __|       | |                    | |
-#   | |    | |_ __   ___| |___      _____  _ __| | __  ___ ____
-#   | |    | | '_ \ / _ \ __\ \ /\ / / _ \| '__| |/ / / __|_  /
-#  _| |_   | | | | |  __/ |_ \ V  V / (_) | |  |   < | (__ / /
-# |_____|  |_|_| |_|\___|\__| \_/\_/ \___/|_|  |_|\_(_)___/___|
-#                                _
-#              ___ ___ ___ _____|_|_ _ _____
-#             | . |  _| -_|     | | | |     |  LICENCE
-#             |  _|_| |___|_|_|_|_|___|_|_|_|
-#             |_|
-#
-# IT ZPRAVODAJSTVÍ  <>  PROGRAMOVÁNÍ  <>  HW A SW  <>  KOMUNITA
-#
-# Tento zdrojový kód je součástí výukových seriálů na
-# IT sociální síti WWW.ITNETWORK.CZ
-#
-# Kód spadá pod licenci prémiového obsahu a vznikl díky podpoře
-# našich členů. Je určen pouze pro osobní užití a nesmí být šířen.
-# Více informací na http://www.itnetwork.cz/licence
 
 from django import forms
 from .models import Film, Uzivatel, Tag, Zanr, Clen, Prichozi_platby, Naplanovane_platby
@@ -43,15 +23,15 @@ class UzivatelForm(forms.ModelForm):
         fields = ["email", "password"]
 
 
-class ClenForm(forms.ModelForm):
+class ClenForm(forms.ModelForm):    
     class Meta:
         model = Clen
-        fields = [ "jmeno", "prijmeni", "narozen", "email", "rc", "clenem_od", "active", "prijmeni_rodic", "facr_id", "var_symbol", "klub_id", "cislo_uctu", "telefonni_cislo", "typ_clena", 
+        fields = [ "jmeno", "prijmeni", "email", "rc", "clenem_od", "active", "prijmeni_rodic", "facr_id", "var_symbol", "klub_id", "cislo_uctu", "telefonni_cislo", "typ_clena", 
         "ucet_protiucet", "ucet_protiucet2", "ucet_kod_banky", "ucet_zprava_pro_prijemce", "ucet_poznamka", "ucet_nazev_protiuctu", "rok_narozeni" ]
         widgets = {
             'jmeno': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Křestní jméno'}),
             'prijmeni': forms.TextInput(attrs={'class': 'form-control', }),
-            'narozen': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            # 'narozen': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', }),
             'rc': forms.TextInput(attrs={'class': 'form-control', }),
             'clenem_od': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
@@ -74,7 +54,7 @@ class ClenForm(forms.ModelForm):
         labels = {
             'jmeno': ('Jméno)'),
             'prijmeni': ('Příjemení'),
-            'Narozen': ('narozen'),
+            # 'Narozen': ('narozen'),
             'email': ('Email'),
             'rc': ('Rodné číslo'),
             'clenem_od': ('Členem od'),
@@ -109,6 +89,50 @@ class ClenForm(forms.ModelForm):
             }
 
         }
+
+
+class PlatbaForm(forms.ModelForm):
+    class Meta:
+        model = Prichozi_platby
+        fields = [ "datum", "objem", "protiucet", "kod_banky", "zprava_pro_prijemce", 
+        "poznamka", "nazev_protiuctu", "typ_platby", "cislo_uctu_prichozi", "jmeno", 
+        "prijmeni", "facr_id" ]
+        
+        widgets = {
+            'datum': forms.DateInput(attrs={'class': 'form-control',}),
+            'objem': forms.TextInput(attrs={'class': 'form-control', }),
+            'protiucet': forms.TextInput(attrs={'class': 'form-control', }),
+            'kod_banky': forms.TextInput(attrs={'class': 'form-control', }),
+            # 'kod_banky': forms.CheckboxInput(attrs={'class': 'form-control', }),
+            'zprava_pro_prijemce': forms.TextInput(attrs={'class': 'form-control', }),
+            'poznamka': forms.TextInput(attrs={'class': 'form-control', }),
+            'nazev_protiuctu': forms.TextInput(attrs={'class': 'form-control', }),
+            'typ_platby': forms.TextInput(attrs={'class': 'form-control', }),
+            'cislo_uctu_prichozi': forms.TextInput(attrs={'class': 'form-control', }),
+            'jmeno': forms.TextInput(attrs={'class': 'form-control', }),
+            'prijmeni': forms.TextInput(attrs={'class': 'form-control', }),
+            'facr_id': forms.TextInput(attrs={'class': 'form-control', }),
+        }
+        labels = {
+            'datum': ('Datum'),
+            'objem': ('Čásktka'),
+            'protiucet': ('Protiůčet'),
+            'kod_banky': ('Kód banky'),
+            'zprava_pro_prijemce': ('Zpráva pro příjemce'),
+            'poznamka': ('Poznámka'),
+            'nazev_protiuctu' : ('Název účtu'),
+            'typ_platby': ('typ platby'),
+            'cislo_uctu_prichozi': ('cislo_uctu_prichozi'),
+            'jmeno': ('Jméno'),
+            'prijmeni': ('Příjemení'),
+            'facr_id': ('FAČR ID'),
+        }
+        error_messages = {
+            'datum': {
+                'required': ('The field can not be empty')
+            },
+        }
+
 
 class LoginForm(forms.Form):
     email = forms.CharField()

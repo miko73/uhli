@@ -14,6 +14,9 @@
     <hr>
     <form method="POST">
         {% csrf_token %}
-        {% if user.is_admin %}<button name="edit_clen">spustit test1</button><button name="delete_clen">Smazat člena</button><button name="db_tests">Db tests</button>{% endif %}
+        {% if user.is_admin %}
+        <button name="test1">Test1</button>
+        <button name="test2">Test2</button>
+        <button name="test3">Test3</button>{% endif %}
     </form>
 {% endblock %}
