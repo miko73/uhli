@@ -138,3 +138,4 @@ STATIC_ROOT = os.path.join(VENV_PATH, 'static_root')
 
 AUTH_USER_MODEL = "moviebook.Uzivatel"
 # adding local
+# adding to branch 1
