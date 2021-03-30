@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+ <div class="container-fluid bg-light">
+        <div class="row">
+            <div class="col-3 border bg-warning">
+
+				<div class="form_group">
+					<form method="post">
+						{% csrf_token %}
+						<table>{{ form.as_table }}</table>
+						<button type="submit" value="Save" class="btn btn-success">Save person</button>
+					</form>
+				</div>
+            </div>
+			<div class="col-3 border bg-success text-white">
+                Search
+                <form method="GET" action=".">
+					<div class="input-group">
+						<input class="form-control py-2 border-right-0 border" type="search" name="filter_prijmeni" placeholder="Prijimeni ??.." />
+						<span class="input-group-append">
+						<div class="input-group-text bg-transparent">
+					            <i class="fa fa-search"></i>
+					        </div>
+					    </span>
+					</div>
+				</form>  
+            </div>
+
+	
+            <div class="col-6 border bg-success text-white">
+                Ctvrtina
+                <div class="container-fluid bg-light">
+				{% for clen in clen_qs %}
+				    <div class="row">
+				    	<div class="col-6 border bg-warning">
+				            <a href={% url "clen_detail" clen.id %}> platba pro: {{clen.facr_id}} </a>
+				        </div>
+				        <div class="col-3 border bg-success text-white">
+				             {{clen.jmeno}}  {{clen.prijmeni}}
+				        </div>
+				        <div class="col-3 border bg-success text-white">
+				            {{clen.rok_narozeni}}
+				        </div>
+				        
+				    </div>
+				{% endfor %}
+				</div>
+
+            </div>
+            
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+{% endblock %}

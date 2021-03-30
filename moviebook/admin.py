@@ -21,7 +21,7 @@
 
 from django.contrib import admin
 from django import forms
-from .models import Clen, Akce, Ucastnici, Film, Zanr, Tag, Uzivatel, UzivatelManager, Prichozi_platby, Naplanovane_platby #Importujeme si modely
+from .models import StaticVariables, Clen, Akce, Ucastnici, Film, Zanr, Tag, Uzivatel, UzivatelManager, Prichozi_platby, Naplanovane_platby #Importujeme si modely
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
@@ -84,3 +84,12 @@ admin.site.register(Zanr)
 admin.site.register(Ucastnici)
 admin.site.register(Uzivatel, UzivatelAdmin)
 admin.site.register(Tag)
+
+global actual_id_platba
+actual_id_platba = 1
+
+global actual_id_clen
+actual_id_clen = 1
+
+global prev_url_name
+prev_url_name = 'clenove_index'

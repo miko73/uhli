@@ -19,7 +19,7 @@ def PlatbaIndex(request):
     # qs = Platba_list = Prichozi_platby.objects.all()
     qs = Prichozi_platby.objects.all()
     platba_contains_query = request.GET.get('title_contains')
-   
+    
     # print("title_contains_query - {0}".format(title_contains_query))
     if platba_contains_query != '' and platba_contains_query is not None:
     # qs = qs.filter(facr_id__icontains=9090086)
@@ -27,8 +27,8 @@ def PlatbaIndex(request):
     print(qs)
 
     context = {
-        'platbaba_qs': qs
-    }
+        'platba_qs': qs
+    } 
     return render(request, "moviebook/platba_index.html", context)
 
 ##############################
@@ -69,25 +69,54 @@ class CurrentPlatbaView(generic.edit.CreateView):
 
 class EditPlatba(LoginRequiredMixin, generic.edit.UpdateView):
     form_class = PlatbaForm
-    template_name = "moviebook/create_clen.html"
+    template_name = "moviebook/edit_platba.html"
 
 
     def get(self, request, pk):        
-        
+        print (f'request.GET {request.GET}')
         if not request.user.is_admin:
             messages.info(request, "Nemáš práva pro úpravu.")
             return redirect(reverse("platba_index"))
         try:
             platba = Prichozi_platby.objects.get(pk=pk)
+            print(f'pk.id')
         except:
             messages.error(request, "Platba neexistuje!")
             return redirect("platba_index")
+
         print ("EDIT PLATBA")
         form = self.form_class(instance=platba)
         
-        return render(request, self.template_name, {"form": form})
+
+########################################################################
+        qs = Clen_list = Clen.objects.all()
+        filter_prijmeni = request.GET.get('filter_prijmeni')
+        clen_detail =  request.GET.get('clen_detail')
+        # print("title_contains_query - {0}".format(title_contains_query))
+        # print(f'filter_prijmeni {filter_prijmeni}')
+        # print(f'platba.prijmeni {platba.prijmeni}')
+
+        if filter_prijmeni != '' and filter_prijmeni is not None:   
+            qs = qs.filter(prijmeni__icontains=filter_prijmeni)       
+        elif platba.prijmeni is not None:
+            qs = qs.filter(prijmeni__icontains=platba.prijmeni)
+
+        context = {
+            'form': form,
+            'clen_qs': qs
+        }
+        print ("filter_prijmeni ", filter_prijmeni)
+        print ("clen detail ", clen_detail) 
+########################################################################
+
+
+
+        return render(request, self.template_name, context)
+
+
 
     def post(self, request, pk):
+        print (f'request.POST {request.POST}')
         if not request.user.is_admin:
             messages.info(request, "Nemáš práva pro úpravu")
             return redirect(reverse("platba_index"))
@@ -107,28 +136,19 @@ class EditPlatba(LoginRequiredMixin, generic.edit.UpdateView):
 # Clen
 #######################################
 
+
 def ClenIndex(request):
     qs = Clen_list = Clen.objects.all()
     title_contains_query = request.GET.get('title_contains')
-    print("title_contains_query - {0}".format(title_contains_query))
+    # print("title_contains_query - {0}".format(title_contains_query))
 
     if title_contains_query != '' and title_contains_query is not None:
         qs = qs.filter(prijmeni__icontains=title_contains_query)        
 
-    
-    # print(qs)
-
-    # elif id_exact_query != '' and id_exact_query is not None:
-    #     qs = qs.filter(id=id_exact_query)
-
-    # elif title_or_author_query != '' and title_or_author_query is not None:
-    #     qs = qs.filter(Q(title__icontains=title_or_author_query)
-    #                    | Q(author__name__icontains=title_or_author_query)
-    #                    ).distinct()
-
     context = {
         'clen_qs': qs
     }
+    print ("in ClenIndex")
     return render(request, "moviebook/clen_index.html", context)
 
 
@@ -150,9 +170,11 @@ class CurrentClenView(generic.edit.CreateView):
             facr_id_query = clen.facr_id
             qs_platby = Prichozi_platby.objects.all()
             qs_platby = qs_platby.filter(facr_id__icontains=facr_id_query)
-    
             # qs_platby = qs_platby.filter(facr_id__icontains=facr_id_query)
-            print ("qs_platby", qs_platby)
+    
+            global actual_id_clen
+            actual_id_clen = clen.id
+            print (f'actual_id_clen {actual_id_clen}')
             # for platba in qs_platby:
             # print (len(qs_platby))
         except:
@@ -175,8 +197,8 @@ class CurrentClenView(generic.edit.CreateView):
         if request.user.is_authenticated:
             if "edit_clen" in request.POST:
                 return redirect("edit_clen", pk=self.get_object().pk)
-            if "db_tests" in request.POST:
-                return redirect("db_tests", pk=self.get_object().pk)
+            if "select_clen" in request.POST:
+                return redirect(reverse("clenove_index"))
             if "delete_clen" in request.POST:
                 if not request.user.is_admin:
                     messages.info(request, "Nemáš práva pro smazání člena.")
@@ -219,15 +241,32 @@ class EditClen(LoginRequiredMixin, generic.edit.UpdateView):
         context = {}
         clen = Clen.objects.get(pk=pk)
         form = self.form_class(request.POST, instance=clen) # Here is the difference between insert and updte instance=clen has to be passed as imput parameter            
-        if form.is_valid():
-            try:
-                form.save()
-                messages.info(request, "SAVED !!!")
-            except:
-                messages.error(request, "Can not save")
-        else:
-            messages.info(request, "Chyba ve formuláři {0}".format(form.cleaned_data["narozen"]))
-        return render(request, self.template_name, {"form":form})
+        if "Save_clen" in request.POST:
+            if form.is_valid():
+                try:
+                    if clen.var_symbol == 1:
+                        clen.var_symbol = clen.id
+                    if clen.facr_id == 1:
+                        clen.facr_id = clen.id                        
+                    form.save()
+                    messages.info(request, "SAVED !!! clen.var_symbol {clen.var_symbol}")
+                except:
+                    messages.error(request, "Can not save")
+            else:
+                messages.info(request, "Chyba ve formuláři {0}".format(form.cleaned_data["narozen"]))
+                return render(request, self.template_name, {"form":form})
+                        
+        if "Back_clen" in request.POST:
+            return redirect("clen_detail", pk = clen.id)
+
+        # print (f'request.POST {request.POST}')
+        return redirect("clen_detail", pk = clen.id)
+            # return redirect("filmovy_detail", pk = film.id)
+            # return redirect("clen_detail", pk=pk)
+
+
+
+        
 
 
 

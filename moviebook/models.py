@@ -2,6 +2,13 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import User
 
+class StaticVariables:
+    actual_id_platba = 0
+    actual_id_clen = 0
+    def __str__(self):
+        return "actual_id_platba: {0} | actual_id_clen: {1}".format(self.actual_id_platba, self.actual_id_clen)
+
+
 
 class CustomDateTimeField(models.DateTimeField):
     def value_to_string(self, obj):
