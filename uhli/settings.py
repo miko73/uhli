@@ -139,3 +139,4 @@ STATIC_ROOT = os.path.join(VENV_PATH, 'static_root')
 AUTH_USER_MODEL = "moviebook.Uzivatel"
 
 # tohle jen v mastru
+# tuhle picovinu nechci ale mam ji v commitu
